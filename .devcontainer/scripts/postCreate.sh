@@ -10,6 +10,6 @@ if [ -f "/workspaces/${LOCAL_WORKSPACE_FOLDER_BASENAME:-fhir-playwright-automati
 fi
 
 # Ensure browsers + OS deps are installed inside the container
-npx playwright install --with-deps
+npx --yes playwright@latest install --with-deps
 
 echo "==> Post-create complete"

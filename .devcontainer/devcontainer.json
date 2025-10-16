@@ -2,21 +2,18 @@
   "name": "FHIR Playwright (Codespaces)",
   "build": {
     "dockerfile": "Dockerfile",
-    "context": ".devcontainer"
+    "context": ".."
   },
-
   // Set the default workspace folder (inside the container)
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-
   // Mount your repo to the container
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached",
-
   // Use the non-root user provided by the base image (more secure; npm cache lives under this user)
   "remoteUser": "node",
-
   // Forward ports only if you run a local web app you want to hit from tests
-  "forwardPorts": [9222],
-
+  "forwardPorts": [
+    9222
+  ],
   // Recommended VS Code extensions inside Codespaces
   "customizations": {
     "vscode": {
@@ -32,21 +29,16 @@
       }
     }
   },
-
   // These commands run automatically after the container is built & the repo is mounted
   "postCreateCommand": "bash .devcontainer/scripts/postCreate.sh",
-
   // Optional: re-run lightweight commands when the container starts
   "postStartCommand": "bash .devcontainer/scripts/postStart.sh",
-
   // Persist npm auth/token cache between rebuilds (speed)
   "containerEnv": {
     "PLAYWRIGHT_BROWSERS_PATH": "/ms-playwright"
   },
-
   // For large repos, improves FS perf in Codespaces
   "updateContentCommand": "",
-
   // Features are optional; base image already has git, curl, etc.
   "features": {}
 }
