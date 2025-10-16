@@ -12,6 +12,7 @@ USER root
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y --no-install-recommends \
        xvfb \
+        xauth \  
        libnss3 \
        libatk-bridge2.0-0 \
        libxkbcommon0 \
