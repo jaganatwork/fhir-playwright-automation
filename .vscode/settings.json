@@ -1,0 +1,15 @@
+{
+  "playwright.env": {
+    "NODE_ENV": "local",
+    "BASE_URL": "https://hapi.fhir.org/baseR4"
+  },
+  "files.exclude": {
+    "playwright-report": true,
+    "test-results": true,
+    ".auth": true,
+    "node_modules": true
+  },
+  "editor.formatOnSave": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "workbench.colorTheme": "Default Dark Modern"
+}
