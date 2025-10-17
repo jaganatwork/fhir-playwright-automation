@@ -1,0 +1,52 @@
+name: 🧪 Playwright Tests
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    test:
+        name: Run Playwright Tests
+        runs-on: ubuntu-latest
+
+        env:
+            NODE_ENV: local
+            BASE_URL: https://hapi.fhir.org/baseR4
+            DEBUG: 0
+
+        steps:
+            # 1️⃣ Checkout code
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            # 2️⃣ Setup Node.js
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            # 3️⃣ Install dependencies
+            - name: Install dependencies
+              run: npm ci
+
+            # 4️⃣ Install Playwright browsers
+            - name: Install Playwright browsers
+              run: npx playwright install --with-deps
+
+            # 5️⃣ Run lint checks
+            - name: Run ESLint
+              run: npx eslint . --ext .ts,.js --config eslint.config.mts
+
+            # 6️⃣ Run Playwright tests (headless)
+            - name: Run Playwright tests
+              run: npx playwright test --reporter=html
+
+            # 7️⃣ Upload Playwright report for inspection
+            - name: Upload Playwright HTML report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report/
