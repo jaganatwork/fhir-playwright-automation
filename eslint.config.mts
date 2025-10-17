@@ -1,8 +1,8 @@
 // eslint.config.mts
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
+import tseslint from 'typescript-eslint';
 import prettierPlugin from 'eslint-plugin-prettier';
 import playwright from 'eslint-plugin-playwright';
+import js from '@eslint/js';
 
 const prettierConfig = {
     semi: true,
@@ -16,28 +16,27 @@ const prettierConfig = {
     proseWrap: 'preserve',
 };
 
-export default [
+// ✅ Unified ESLint Flat Config for TypeScript + Playwright + Prettier
+export default tseslint.config(
+    js.configs.recommended, // base JS rules
+    ...tseslint.configs.recommended, // base TS rules
     {
+        files: ['**/*.ts', '**/*.tsx'],
         ignores: ['node_modules', 'dist', 'playwright-report', 'test-results'],
-    },
-    {
-        files: ['tests/**/*.ts'],
         languageOptions: {
-            parser: tsParser,
+            parser: tseslint.parser,
             parserOptions: {
+                project: ['./tsconfig.json'],
                 ecmaVersion: 2020,
                 sourceType: 'module',
-                project: ['./tsconfig.json'],
             },
         },
         plugins: {
-            '@typescript-eslint': tseslint,
+            '@typescript-eslint': tseslint.plugin,
             prettier: prettierPlugin,
             playwright,
         },
         rules: {
-            ...tseslint.configs.recommended.rules,
-            ...playwright.configs['flat/recommended'].rules,
             'prettier/prettier': ['error', prettierConfig],
             '@typescript-eslint/explicit-function-return-type': 'error',
             '@typescript-eslint/no-explicit-any': 'error',
@@ -45,15 +44,18 @@ export default [
                 'error',
                 { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
             ],
-            'no-console': 'error',
+            'no-console': process.env.CI ? 'error' : 'warn',
             'prefer-const': 'error',
             '@typescript-eslint/no-inferrable-types': 'error',
             '@typescript-eslint/no-empty-function': 'error',
             '@typescript-eslint/no-floating-promises': 'error',
+
+            // Playwright
+            ...playwright.configs['flat/recommended'].rules,
             'playwright/missing-playwright-await': 'error',
             'playwright/no-page-pause': 'error',
             'playwright/no-useless-await': 'error',
             'playwright/no-skipped-test': 'error',
         },
-    },
-];
+    }
+);
